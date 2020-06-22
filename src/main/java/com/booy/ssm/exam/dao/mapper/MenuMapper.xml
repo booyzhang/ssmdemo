@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.booy.ssm.exam.dao.MenuDAO">
+    <select id="getAllMenu" resultType="Menu">
+        select id,name,parent_id parentId,url,sort,type from menu
+    </select>
+    <insert id="addMenu" parameterType="Menu">
+        insert into menu(name, parent_id, url, type) VALUES(#{name},#{parentId},#{url},#{type})
+    </insert>
+    <update id="updateMenu" parameterType="Menu">
+        update menu set
+            <if test="name!=null and name!=''">name=#{name},</if>
+            <if test="parentId!=null and parentId!=''">parent_id=#{parentId},</if>
+            <if test="url!=null and url!=''">url=#{url},</if>
+            <if test="type!=null">type=#{type}</if>
+             where id=#{id}
+    </update>
+    <delete id="deleteMenu" parameterType="int">
+        delete from menu where id=#{id}
+    </delete>
+</mapper>

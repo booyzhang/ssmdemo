@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.booy.ssm.exam.dao.UserDAO">
+    <!--<![CDATA[你的注释]]>-->
+    <select id="getUserByAccount" resultType="User" parameterType="String">
+        select id, account, password,nickname,status,salt
+        from user
+        where account=#{account}
+    </select>
+
+    <insert id="addUser" parameterType="User" >
+        insert into user(account, password,nickname,salt) values(#{account},#{password},#{nickname},#{salt})
+    </insert>
+    <update id="updateUser" parameterType="User">
+        update user <set>
+        <if test="password!=null and password!=''">password=#{password},</if>
+        <if test="nickname!=null and nickname!=''">nickname=#{nickname},</if>
+        <if test="status!=null">status=#{status}</if>
+    </set>
+    where id=#{id}
+    </update>
+    <update id="deleteUser" parameterType="int">
+        update user set status=0 where id=#{id}
+    </update>
+    <select id="getUserList" parameterType="User" resultType="User">
+        select id, account, password,nickname,status
+        from user
+        <where>
+            <if test="account!=null and account!=''">and account like concat('%',#{account},'%')</if>
+            <if test="nickname!=null and nickname!=''">
+                <bind name="temp" value="'%'+nickname+'%'"/>
+                and nickname like #{temp}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.booy.ssm.exam.dao.PremissionDAO">
+    <delete id="deleteRoleMenuByRoleId" parameterType="int">
+        delete from role_menu where role_id=#{roleId}
+    </delete>
+    <insert id="addRoleMenu">
+        insert into role_menu(role_id, menu_id) VALUES (#{roleId},#{menuId})
+    </insert>
+    <select id="getMenuByRoleId" parameterType="int" resultType="int">
+        select menu_id from role_menu where role_id=#{roleId}
+    </select>
+
+    <delete id="deleteUserRoleByUserId" parameterType="int">
+        delete from user_role where user_id=#{userId}
+    </delete>
+    <insert id="addUserRole">
+        insert into user_role(user_id, role_id) VALUES (#{userId},#{roleId})
+    </insert>
+    <select id="getRoleByUserId" parameterType="int" resultType="int">
+        select role_id from user_role where user_id=#{userId}
+    </select>
+
+    <select id="getUserMenuList" parameterType="int" resultType="Menu">
+        select id,name,parent_id parentId,url,type
+        from menu m
+                 inner join role_menu rm on m.id = rm.menu_id
+                 inner join user_role ur on ur.role_id = rm.role_id
+        where user_id=#{userId}
+    </select>
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation=" http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.2.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
+    <!-- 启动注解，注册服务-->
+    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManagerFactoryBean"/>
+    <!--视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/pages/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <!-- 启动自动扫描-->
+    <!-- 制定扫包规则 ,扫描controller包下面的类-->
+    <context:component-scan base-package="com.booy.ssm.exam.controller">
+        <!-- 扫描使用@Controller注解的JAVA 类 -->
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    <!--拦截器配置-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/*"/>
+            <mvc:exclude-mapping path="/login.html"/>
+            <mvc:exclude-mapping path="/dologin.html"/>
+            <bean class="com.booy.ssm.exam.interceptor.LoginInterceptor"/>
+        </mvc:interceptor><mvc:interceptor>
+            <mvc:mapping path="/sys/*"/>
+            <bean class="com.booy.ssm.exam.interceptor.MenuInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!--配置返回值转换器-->
+    <bean id="contentNegotiationManagerFactoryBean"
+          class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <!--是否支持后缀匹配-->
+        <property name="favorPathExtension" value="false"/>
+        <!--是否支持参数匹配-->
+        <property name="favorParameter" value="false"/>
+        <!--是否 accept-header 匹配-->
+        <property name="ignoreAcceptHeader" value="false"/>
+        <property name="mediaTypes">
+            <map>
+                <!--表示.json 结尾的请求返回 json-->
+                <entry key="json" value="application/json"/>
+            </map>
+        </property>
+    </bean>
+</beans>

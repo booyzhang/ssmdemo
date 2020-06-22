@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.booy.ssm.exam.dao.RoleDAO">
+    <select id="getRoleList" resultType="Role">
+        select id, name, remark, status
+        from role
+    </select>
+    <select id="getRoleListByIF" parameterType="Role" resultType="Role">
+        select id,name,remark,status from role
+        <where>
+            <if test="name!=null and name!=''">and name like concat('%',#{name},'%')</if>
+            <if test="remark!=null and remark!=''">and remark like concat('%',#{remark},'%')</if>
+        </where>
+    </select>
+    <insert id="addRole" parameterType="Role">
+        insert into role (name, remark, status)
+        VALUES (#{name}, #{remark}, #{status})
+    </insert>
+    <update id="updateRole" parameterType="Role">
+        update role set
+        <if test="name!=null and name!=''">name=#{name},</if>
+        <if test="remark!=null and remark!=''">remark=#{remark},</if>
+        <if test="status!=null">status=#{status}</if>
+        where id=#{id}
+    </update>
+    <delete id="deleteRole" parameterType="int">
+        delete from role where id=#{id}
+    </delete>
+</mapper>
